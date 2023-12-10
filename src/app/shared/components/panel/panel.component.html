@@ -1,0 +1,137 @@
+<h2 mat-dialog-title>{{ operation }}</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-accordion class="example-headers-align">
+      @for (steps of definition; track steps) {
+      <mat-expansion-panel [expanded]="openStep === steps.step" (opened)="setStep(steps.step)" hideToggle
+        [hidden]="steps.hidden" [disabled]="steps.disabled">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ steps.panelTitle }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ steps.panelDescription }}
+<!--             <mat-icon [style.color]="panelIcon === [steps.panelIcon] ? '' : (isPanelValid(steps) ? 'green' : 'orange')">
+              {{ panelIcon || steps.panelIcon }}
+            </mat-icon> -->
+<!--             <mat-icon [style.color]="isPanelValid(steps) ? 'green' : 'orange'">
+              {{ panelIcon || steps.panelIcon }}
+            </mat-icon> -->
+            <mat-icon [style.color]="isPanelValid(steps) ? 'green' : ''">
+              {{ steps.panelIcon }}
+            </mat-icon>
+<!--             <mat-icon>
+              {{ steps.panelIcon}}
+            </mat-icon> -->
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <br>
+        <div class="row">
+          @for (element of steps.content; track element) {
+          <div class="{{ element.colClass }}">
+            <ng-container *ngTemplateOutlet="elements; context: {$implicit: element}"></ng-container>
+          </div>
+          }
+        </div>
+        <mat-action-row>
+          <button mat-button color="warn" type="button" (click)="prevStep()" [hidden]="steps.btnPrevHidden"
+            [disabled]="steps.btnPrevDisabled">{{ steps.btnPrevLabel }}</button>
+          <button mat-button color="primary" type="button" (click)="nextStep()" [hidden]="steps.btnNextHidden"
+            [disabled]="steps.btnNextDisabled">{{ steps.btnNextLabel }}</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      }
+    </mat-accordion>
+    <ng-template #elements let-element>
+      @switch (element.element) {
+      @case ('input') {
+      <div>
+        <mat-form-field style="width: 100%">
+          <mat-label> {{ element.label }} </mat-label>
+          <input [type]="element.type ?? 'defaultType'" [min]="element.min" [max]="element.max" matInput
+            [placeholder]="element.placeholder" [formControlName]="element.name" [readonly]="element.readonly"
+            [disabled]="element.disabled">
+          <mat-hint align="end">{{ element.unit }}</mat-hint>
+          @if (form.get(element.name)?.invalid) {
+          <mat-error>
+            {{ element.validationMsg }}
+          </mat-error>
+          }
+        </mat-form-field>
+      </div>
+      }
+      @case ('list') {
+      <div>
+        <mat-form-field style="width: 100%;" [hidden]="element.hidden">
+          <mat-label>Buscar</mat-label>
+          <input matInput (keyup)="applyFilter($event, element.name)" placeholder="">
+        </mat-form-field>
+        <mat-selection-list #optionElement [formControlName]="element.name" [multiple]="element.multiple"
+          style="max-height: 150px; overflow-y: auto;" (selectionChange)="onSelectionChange($event, element.name)"
+          [hidden]="element.hidden">
+          @for (option of filteredOptions[element.name]; track option) {
+          <mat-list-option [value]="option.value">{{option.label}}</mat-list-option>
+          }
+        </mat-selection-list>
+        <br>
+      </div>
+      }
+      @case ('select') {
+      <div>
+        <mat-form-field style="width: 100%">
+          <mat-label> {{ element.label }} </mat-label>
+          <mat-select [formControlName]="element.name">
+            @for (option of element.options; track option) {
+            <mat-option [value]="option.value"> {{ option.label }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get(element.name)?.hasError('required') && form.get(element.name)?.touched) {
+          <mat-hint class="error">{{
+            element.validationMsg }}</mat-hint>
+          }
+        </mat-form-field>
+      </div>
+      }
+      @case ('picker') {
+      <div>
+        <mat-form-field style="width: 100%">
+          <mat-label>{{ element.label }}</mat-label>
+          <input [formControlName]="element.name" matInput [matDatepicker]="picker">
+          @if (form.get(element.name)?.hasError('required') && form.get(element.name)?.touched) {
+          <mat-hint class="error"> {{ element.validationMsg }}</mat-hint>
+          }
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      }
+      @case ('upload') {
+      <div style="width: 100%">
+        <app-file [buttonLabel]="element.label" [formControlName]="element.name">
+          ></app-file>
+      </div>
+      }
+      @case ('filter') {
+        <div>
+          <mat-form-field style="width: 100%">
+            <mat-label> {{ element.label }} </mat-label>
+            <mat-select [formControlName]="element.name" (selectionChange)="applyFilter2($event, element.name)">
+              @for (option of element.options; track option) {
+              <mat-option [value]="option.value"> {{ option.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get(element.name)?.hasError('required') && form.get(element.name)?.touched) {
+            <mat-hint class="error">{{
+              element.validationMsg }}</mat-hint>
+            }
+          </mat-form-field>
+        </div>
+      }
+      }
+    </ng-template>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-button (click)="cancelOperation()">Cancelar</button>
+    <button [disabled]="form.invalid" type="submit" mat-button>Aceptar</button>
+  </mat-dialog-actions>
+</form>

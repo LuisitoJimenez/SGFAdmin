@@ -1,0 +1,15 @@
+<mat-toolbar>
+  <img src="../../../assets/img/icons/referee.png" alt="User" class="toolbar-image">
+  <span class="toolbar-span">{{ titleModule }}</span>
+  <div class="example-spacer"></div>
+  <button mat-fab color="primary" aria-label="boton-borrar" matTooltip="Agregar" class="my-fab"
+    (click)="handleRefereeOperation()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="list">
+  @for (referee of refereesList; track referee) {
+  <app-card [imageSrc]="imageSrc" [cardData]="referee" [cardDefinition]="cardDefinition"
+    (deleteItem)="deleteReferee($event)" (editItem)="handleRefereeOperation($event)"></app-card>
+  }
+</div>

@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>{{ operation }}</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    @if (isLoaded) {
+    <div class="row">
+      @for (item of definition; track item; let i = $index) {
+      <div class="{{ item.colClass }}">
+        @if (item.element === 'input') {
+        <div>
+          <mat-form-field style="width: 100%">
+            <mat-label> {{ item.label }} </mat-label>
+            <input [type]="item.type ?? 'defaultType'" [step]="item.step" [min]="item.min" [max]="item.max" matInput
+              [placeholder]="item.placeholder!" [formControlName]="item.name" [readonly]="item.readonly">
+            <mat-hint align="end">{{ item.unit }}</mat-hint>
+            @if (form.get(item.name)?.invalid) {
+            <mat-error>
+              {{ item.validationMsg }}
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        }
+        @if (item.element === 'select') {
+        <div>
+          <mat-form-field style="width: 100%">
+            <mat-label> {{ item.label }} </mat-label>
+            <mat-select [formControlName]="item.name">
+              @for (option of item.options; track option) {
+              <mat-option [value]="option.value"> {{ option.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get(item.name)?.hasError('required') && form.get(item.name)?.touched) {
+            <mat-hint class="error">{{
+              item.validationMsg }}</mat-hint>
+            }
+          </mat-form-field>
+        </div>
+        }
+        @if (item.element === 'list') {
+        <div>
+          <mat-form-field style="width: 100%;" [hidden]="item.hidden">
+            <mat-label>Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="">
+          </mat-form-field>
+          <mat-selection-list #optionElement [formControlName]="item.name" [multiple]="item.multiple"
+            style="max-height: 150px; overflow-y: auto;" (selectionChange)="onSelectionChange($event)"
+            [hidden]="item.hidden">
+            @for (option of filteredOptions; track option) {
+            <mat-list-option [value]="option.value">{{option.label}}</mat-list-option>
+            }
+          </mat-selection-list>
+          <br>
+        </div>
+        }
+        @if (item.element === 'picker') {
+        <div>
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ item.label }}</mat-label>
+            <input [formControlName]="item.name" matInput [matDatepicker]="picker">
+            @if (form.get(item.name)?.hasError('required') && form.get(item.name)?.touched) {
+            <mat-hint class="error"> {{ item.validationMsg }}</mat-hint>
+            }
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-button (click)="cancelOperation()">Cancelar</button>
+    <button [disabled]="form.invalid" type="submit" mat-button>Aceptar</button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,150 @@
+<body class="container">
+  @if (user) {
+  <div></div>
+  } @if (isLogin) {
+  <div name="loginForm">
+    <mat-card>
+      <mat-card-content>
+        <form class="form">
+          <div>
+            <h1>Iniciar sesión</h1>
+          </div>
+          <div>
+            <mat-form-field class="field">
+              <mat-label>Email:</mat-label>
+              <input
+                matInput
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="user.email"
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="field">
+              <mat-label>Contraseña:</mat-label>
+              <input
+                matInput
+                type="password"
+                id="password"
+                name="password"
+                [(ngModel)]="user.password"
+              />
+            </mat-form-field>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="signInWithCognito()"
+            class="button"
+          >
+            Ingresar
+          </button>
+          <br />
+          <a class="enlace" onclick="">¿Olvidaste tu contraseña?</a><br />
+          <a class="enlace" href="auth/signup">¿No tienes cuenta? Regístrate</a>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  } @if (isRecovery) {
+  <div name="forgotPassword">
+    <mat-card>
+      <mat-card-content>
+        <div>
+          <h1>Recuperar Contraseña</h1>
+        </div>
+        <form class="container">
+          <mat-form-field appearance="fill">
+            <mat-label>Nueva contraseña:</mat-label>
+            <input
+              matInput
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              [(ngModel)]="newPassword"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Codigo Verificación:</mat-label>
+            <input
+              matInput
+              type="code"
+              id="code"
+              name="code"
+              [(ngModel)]="user.code"
+            />
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit">
+            Ingresar
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  } @if (isComfirm) {
+  <div name="confirm">
+    <mat-card>
+      <mat-card-content>
+        <div>
+          <h1>Confirmar Cuenta</h1>
+        </div>
+        <form class="form">
+          <mat-form-field class="field">
+            <mat-label>Contraseña:</mat-label>
+            <input
+              matInput
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="user.newPassword"
+            />
+          </mat-form-field>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="goConfirmPassword()"
+          >
+            Confirmar
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  } @if (isVerify) {
+  <div name="verify">
+    <mat-card>
+      <mat-card-content>
+        <div>
+          <h1>Verificar Cuenta</h1>
+        </div>
+        <form class="form">
+          <mat-form-field class="field">
+            <mat-label>Codigo Verificación:</mat-label>
+            <input
+              matInput
+              type="code"
+              id="code"
+              name="code"
+              [(ngModel)]="user.code"
+            />
+          </mat-form-field>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="verifyUser()"
+          >
+            Verificar
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  }
+</body>

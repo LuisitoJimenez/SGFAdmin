@@ -1,0 +1,38 @@
+export interface PlayerModel {
+  photo: string;
+  identification: string;
+  gender: number;
+  birthDate: Date;
+  height: number;
+  weight: number;
+  state: string;
+  town: string;
+}
+
+export interface ClubModel {
+  name: string;
+  email: string;
+  phone: string;
+  facebook: string;
+  instagram: string;
+  youtube: string;
+  website: string;
+  logo: string;
+}
+
+export interface RefereeModel {
+  photo: string;
+  identification: string;
+  gender: number;
+  birthDate: Date;
+  height: number;
+  weight: number;
+  state: string;
+  town: string;
+}
+
+export interface SubModel {
+  id: number;
+  name: string;
+  age: number;
+}
