@@ -1,0 +1,27 @@
+.example-card {
+  max-width: 400px;
+}
+
+.mat-card-header {
+  flex-direction: column;
+}
+
+.my-fab {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  margin: 5px;
+}
+
+.my-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-content {
+  display: flex;
+}
+
+.card-image {
+  margin-right: 20px;
+}

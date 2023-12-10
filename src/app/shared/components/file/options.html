@@ -1,0 +1,11 @@
+<mat-nav-list>
+  <a mat-list-item (click)="openDialog()">
+    <span matListItemTitle>Tomar una foto</span>
+    <span matLine>Cargar desde la computadora</span>
+  </a>
+  <a mat-list-item (click)="openFileInput($event)">
+    <span matListItemTitle>Cargar foto</span>
+    <span matLine>Cargar una imagen</span>
+    <input type="file" style="display: none;" #fileInput (change)="handleFileInput($event)">
+  </a>
+</mat-nav-list>

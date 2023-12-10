@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Torneos",
+    "link": "/admin/tournaments",
+    "icon": "../../../assets/img/icons/trophy.png",
+    "alt": "Icon-torneo"
+  },
+  {
+    "name": "Partidos",
+    "link": "/admin/games",
+    "icon": "../../../assets/img/icons/game.png",
+    "alt": "Icon-partido"
+  },
+  {
+    "name": "Clubs",
+    "link": "/admin/clubs",
+    "icon": "../../../assets/img/icons/club.png",
+    "alt": "Icon-equipo"
+  },
+  {
+    "name": "Equipos",
+    "link": "/admin/teams",
+    "icon": "../../../assets/img/icons/soccer-team.png",
+    "alt": "Icon-equipo"
+  },
+  {
+    "name": "Arbitros",
+    "link": "/admin/referees",
+    "icon": "../../../assets/img/icons/referee.png",
+    "alt": "Icon-arbitro"
+  },
+  {
+    "name": "Jugadores",
+    "link": "/admin/players",
+    "icon": "../../../assets/img/icons/player.png",
+    "alt": "Icon-jugador"
+  },
+  {
+    "name": "Estadísticas",
+    "link": "/admin/statistics",
+    "icon": "../../../assets/img/icons/statistics.png",
+    "alt": "Icon-estadistica"
+  },
+  {
+    "name": "Usuarios",
+    "link": "/admin/users/",
+    "icon": "../../../assets/img/icons/user.png",
+    "alt": "Icon-usuario"
+  }
+]

@@ -1,0 +1,101 @@
+<body class="container">
+  @if (user) {
+  <div></div>
+  } @if (isRegister) {
+    <div name="loginForm">
+      <mat-card>
+        <mat-card-content>
+          <form class="form">
+            <div>
+              <h1>Registrarte</h1>
+            </div>
+            <div>
+              <mat-form-field class="field">
+                <mat-label>Nombre:</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  id="fullname"
+                  name="fullname"
+                  [(ngModel)]="user.fullname"
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="field">
+                <mat-label>Email:</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="user.email"
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="field">
+                <mat-label>Contraseña:</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="user.password"
+                />
+              </mat-form-field>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="button"
+              (click)="signUpWithCognito()"
+            >
+              Registrarte
+            </button>
+            <br />
+            <a class="enlace" href="auth/login">Iniciar sesión</a>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    }@if (isConfirm) {
+    <div name="confirmForm">
+      <mat-card>
+        <mat-card-content>
+          <form class="form">
+            <div>
+              <h1>Confirmar Cuenta</h1>
+            </div>
+            <div>
+              <mat-form-field class="field">
+                <mat-label>Código de confirmación:</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  id="code"
+                  name="code"
+                  [(ngModel)]="user.code"
+                />
+              </mat-form-field>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="button"
+              (click)="confirmSignUp()"
+            >
+              Confirmar
+            </button>
+            <br />
+            <a class="enlace" (click)="resendCode()">ReenviarCodigo</a>
+            <p *ngIf="is_Resend">Enviado</p>
+            <a class="enlace" href="auth/login">Iniciar sesión</a>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    }
+</body>

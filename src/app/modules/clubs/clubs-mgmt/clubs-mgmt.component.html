@@ -1,0 +1,15 @@
+<mat-toolbar>
+  <img src="../../../assets/img/icons/club.png" alt="User" class="toolbar-image">
+  <span class="toolbar-span">{{ titleModule }}</span>
+  <div class="example-spacer"></div>
+  <button mat-fab color="primary" aria-label="boton-borrar" matTooltip="Agregar" class="my-fab"
+    (click)="handlePlayerOperation()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="list">
+  @for (club of clubsList; track club) {
+  <app-card [imageSrc]="imageSrc" [cardData]="club" [cardDefinition]="cardDefinition" (deleteItem)="deleteClub($event)"
+    (editItem)="handlePlayerOperation($event)"></app-card>
+  }
+</div>

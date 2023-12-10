@@ -1,0 +1,11 @@
+<mat-toolbar color="primary" class="mat-elevation-z5">
+  <button mat-icon-button (click)="snav.toggle()" example-icon aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="title">Sistema de Gestión del Fútbol</span>
+  <span class="spacer"></span>
+  <button mat-button [matMenuTriggerFor]="menu">{{ userName }}</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="signOut()"> Salir</button>
+  </mat-menu>
+</mat-toolbar>

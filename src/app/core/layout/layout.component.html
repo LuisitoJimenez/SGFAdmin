@@ -1,0 +1,26 @@
+<app-header [snav]="snav"></app-header>
+<mat-sidenav-container class="example-sidenav-container">
+  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+    fixedTopGap="56">
+    <mat-nav-list>
+      <ng-container *ngFor="let item of menuItems">
+        <a mat-list-item [routerLink]="item.link">
+          <img [src]="item.icon" [alt]="item.alt" class="icon">
+          &nbsp;{{ item.name }}
+        </a>
+        <mat-list *ngIf="item.submenus">
+          <a mat-list-item [routerLink]="submenu.link" *ngFor="let submenu of item.submenus" class="submenu-item">
+            <img [src]="item.icon" [alt]="item.alt" class="icon">
+            &nbsp;&nbsp;&nbsp;{{ submenu.name }}
+          </a>
+        </mat-list>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="snav">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+@if (!shouldRun) {
+<div>Please open on Stackblitz to see result</div>
+}

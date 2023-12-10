@@ -1,0 +1,47 @@
+<mat-card class="example-card">
+  <mat-card-header class="mat-card-header">
+    <mat-card-title> {{ cardTitle }} </mat-card-title>
+    <mat-card-subtitle> {{ cardSubtitle }}</mat-card-subtitle>
+    <br>
+  </mat-card-header>
+  <mat-card-content>
+    @if (cardImage) {
+    <img [src]="cardImage" alt="Player image" style="width: 100px; height: 100px;" class="card-image">
+    }
+    @for (item of cardDefinition.values; track item; let i = $index) {
+    <div>
+      <p style="margin-bottom: 0.5em;">
+        @if (cardDefinition.showLabels) {
+        <strong>{{ cardDefinition.labels[i] }}: </strong>
+        }
+        @if (isUrl(cardData[item.element])) {
+        <a href="{{ cardData[item.element] }}" target="_blank">{{ cardData[item.element] }}</a>
+        }
+        @else {
+        {{ cardData[item.element] }}
+        }
+      </p>
+    </div>
+    }
+    <mat-divider></mat-divider>
+  </mat-card-content>
+  <mat-card-actions class="my-card-actions">
+    <div>
+      @if (cardData['id']) {
+      <button mat-fab color="primary" aria-label="Example icon button with a delete icon" matTooltip="Editar"
+        class="my-fab" (click)="editItem.emit(cardData['id'])">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-fab color="warn" aria-label="Example icon button with a delete icon" class="my-fab"
+        matTooltip="Borrar" (click)="deleteItem.emit(cardData['id'])">
+        <mat-icon>delete</mat-icon>
+      </button>
+      }
+    </div>
+  </mat-card-actions>
+  <mat-card-footer>
+    @if (showProgressBar) {
+    <mat-progress-bar mode="indeterminate" [value]="progress" [hidden]="false"></mat-progress-bar>
+    }
+  </mat-card-footer>
+</mat-card>
