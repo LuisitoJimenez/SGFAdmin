@@ -163,5 +163,33 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     step: 3,
     hidden: false,
     disabled: false
+  },
+  {
+    btnNextHidden: true,
+    btnPrevLabel: 'Anterior',
+    btnPrevDisabled: false,
+    btnNextDisabled: false,
+    content: [
+      {
+        colClass: 'col-sm-12',
+        element: FormElement.chip,
+        disabled: false,
+        hidden: false,
+        label: '',
+        options: [],
+        multiple: true,
+        name: 'team1',
+        readonly: false,
+        validation: {
+          required: false
+        },
+      }
+    ],
+    panelTitle: 'Jugadores suplentes',
+    panelDescription: 'Selecciona los jugadores suplentes',
+    panelIcon: 'check_circle',
+    step: 4,
+    hidden: false,
+    disabled: false
   }
 ];
