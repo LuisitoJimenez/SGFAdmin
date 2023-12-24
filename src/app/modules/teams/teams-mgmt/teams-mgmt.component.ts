@@ -1,6 +1,7 @@
 import { AccessService } from './../../../services/access.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { min } from 'rxjs';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
 import { DefinitionService } from 'src/app/services/definition.service';
 import { PanelComponent } from 'src/app/shared/components/panel/panel.component';
@@ -15,6 +16,7 @@ export class TeamsMgmtComponent implements OnInit {
   clubsList: any[] = [];
   operation: string = '';
   openStep: number = 0;
+  optionsSubs: any[] = [];
   titleModule: string = 'Equipos';
 
   form: any = {
@@ -30,10 +32,10 @@ export class TeamsMgmtComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDefinition();
-    this.getClubsOptions();
+    this.getClubsOptions();    
+    this.getSubsOptions();
     this.getPlayersOptions();
     this.getGenderOptions();
-    this.getSubsOptions();
   }
 
   getDefinition(): void {
@@ -83,11 +85,15 @@ export class TeamsMgmtComponent implements OnInit {
   getPlayersOptions() {
     this.accessService.getPlayersList().subscribe({
       next: (result: any) => {
+        console.log(this.optionsSubs);
         console.log(result);
         if (result.success) {
           const options: OptionsElement[] = result.data.map((player: any) => {
             const parsedName = player.name;
             const age = this.calculateAge(player.birthday);
+            console.log(age);
+            console.log(this.calculateSub(age, this.optionsSubs));
+            const sub = this.calculateSub(age, this.optionsSubs);
             let gender;
             if (player.genderId === 1) {
               gender = 'Masculino';
@@ -98,7 +104,7 @@ export class TeamsMgmtComponent implements OnInit {
               value: player.id,
               label: `${player.id} ${parsedName.first} ${parsedName.last} ${parsedName.secondLast}`,
               gender: player.genderId,
-              sub: age
+              sub: sub
             };
             return option;
           });
@@ -119,16 +125,33 @@ export class TeamsMgmtComponent implements OnInit {
     });
   }
 
-  openOperationDialog() {
+  calculateSub(age: number, subs: any[]): any {
+    const subId = subs.find(sub => age >= sub.minAge && age <= sub.maxAge)?.value;    
+    return subId ? subId : null;
+  }
+
+  openOperationDialog(teamId?: number): void {
     const dialogRef = this.dialog.open(PanelComponent, {
       disableClose: true,
       data: {
         openStep: this.openStep,
+        teamId: teamId,
         itemData: this.form.data,
-        operation: this.operation,
-        definition: this.form.definition
+        //operation: this.operation,
+        definition: this.form.definition,
+        operation: this.operation
       },
       width: '50vw'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && this.operation === 'Editar' && teamId) {
+        console.log(teamId);
+        console.log(result.data);
+      } else if (result && this.operation === 'Agregar') {
+        console.log(teamId);
+        console.log(result.data);
+      }
     });
   }
 
@@ -160,6 +183,7 @@ export class TeamsMgmtComponent implements OnInit {
         };
         return option;
       });
+      console.log(options);
       this.form.definition.forEach((step: any) => {
         step.content.forEach((element: any) => {
           if (element.name === 'gender') {
@@ -173,23 +197,48 @@ export class TeamsMgmtComponent implements OnInit {
   getSubsOptions() {
     this.accessService.getSubsList().subscribe({
       next: (result) => {
-        const options: optionsElement[] = result.map((sub) => {
-          const option: any = {
-            value: sub.age,
-            label: sub.name,
-            //sub: sub.age
-          };
-          return option;
-        });
-        this.form.definition.forEach((step: any) => {
-          step.content.forEach((element: any) => {
-            if (element.name === 'sub') {
-              element.options = options;
+        console.log(result);
+        if (result.success) {
+          console.log(result.data);
+          this.optionsSubs = result.data.map((sub: any) => {
+            const option = {
+              value: sub.id,
+              label: sub.name,
+              minAge: sub.minAge,
+              maxAge: sub.maxAge
             }
+            return option;
           });
-        });
+
+          this.form.definition.forEach((step: any) => {
+            step.content.forEach((element: any) => {
+              if (element.name === 'sub') {
+                element.options = this.optionsSubs;
+              }
+            });
+          });
+          console.log(this.optionsSubs);
+        }
+        /*         const options: optionsElement[] = result.map((sub) => {
+                  const option: any = {
+                    value: sub.id,
+                    label: sub.name,
+                    //sub: sub.age
+                  };
+                  return option;
+                });
+                console.log(options);
+                this.form.definition.forEach((step: any) => {
+                  step.content.forEach((element: any) => {
+                    if (element.name === 'sub') {
+                      element.options = options;
+                    }
+                  });
+                }); */
       },
-      error: (error) => { }
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 
