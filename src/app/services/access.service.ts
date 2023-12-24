@@ -119,8 +119,12 @@ export class AccessService {
     return this.http.patch<void>(`${environment.baseService}${'/referees'}/${refereeId}`, referee);
   }
 
-  getSubsList(): Observable<SubModel[]> {
+/*   getSubsList(): Observable<SubModel[]> {
     return this.http.get<SubModel[]>('./assets/data/subs.json');
+  } */
+
+  getSubsList(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${environment.baseService}${'/categories/subs'}`);
   }
 
   getImagePlayer(playerId: number, fileId: string) {
@@ -146,4 +150,5 @@ export class AccessService {
   uploadImageClub(clubId: number, file: any) {
     return this.http.post(`${environment.baseService}${'/clubs'}/${clubId}`, file);
   }
+
 }
