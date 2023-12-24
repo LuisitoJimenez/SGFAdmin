@@ -17,7 +17,7 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         multiple: false,
         name: 'clubs',
         readonly: false,
-        linkedElement: 'club',
+        linkedElement: 'team',
         validation: {
           required: false
         },
@@ -55,10 +55,10 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         element: FormElement.input,
         disabled: false,
         hidden: false,
-        label: 'Club',
-        name: 'club',
+        label: 'Equipo',
+        name: 'team',
         type: ElementType.text,
-        placeholder: 'Club',
+        placeholder: 'Equipo',
         readonly: true,
         validation: {
           required: true
@@ -116,16 +116,16 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     content: [
       {
         colClass: 'col-sm-12',
-        element: FormElement.list,
+        element: FormElement.chip,
         disabled: false,
         hidden: false,
-        label: '',
+        label: 'Jugador titular',
         options: [],
         multiple: true,
         name: 'titularPlayers',
         readonly: false,
         validation: {
-          required: false
+          required: true
         },
       }
     ],
@@ -144,16 +144,16 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     content: [
       {
         colClass: 'col-sm-12',
-        element: FormElement.list,
+        element: FormElement.chip,
         disabled: false,
         hidden: false,
-        label: '',
+        label: 'Jugador suplente',
         options: [],
         multiple: true,
         name: 'substitutePlayers',
         readonly: false,
         validation: {
-          required: false
+          required: true
         },
       }
     ],
@@ -163,7 +163,7 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     step: 3,
     hidden: false,
     disabled: false
-  },
+  }/* ,
   {
     btnNextHidden: true,
     btnPrevLabel: 'Anterior',
@@ -175,13 +175,13 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         element: FormElement.chip,
         disabled: false,
         hidden: false,
-        label: '',
+        label: 'Jugadores titulares',
         options: [],
         multiple: true,
         name: 'team1',
         readonly: false,
         validation: {
-          required: false
+          required: true
         },
       }
     ],
@@ -191,5 +191,5 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     step: 4,
     hidden: false,
     disabled: false
-  }
+  } */
 ];
