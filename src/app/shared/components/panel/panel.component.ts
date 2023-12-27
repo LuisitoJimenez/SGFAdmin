@@ -215,7 +215,6 @@ export class PanelComponent {
             this.originalImageUrl = data;
           });
         }
-
         if (element.element === 'chip') {
           this.options[element.name] = element.options;          
           this.originalOptions[element.name] = [...element.options];
@@ -225,6 +224,12 @@ export class PanelComponent {
           console.log(this.options[element.name]);
           console.log(this.originalOptions[element.name]);
           console.log(this.linkedElement[element.name]);
+        }
+        if (element.element === 'autocomplete') {
+          this.options[element.name] = element.options;
+          this.filteredOptions[element.name] = element.options;
+          //this.originalOptions[element.name] = [...element.options];
+          //this.linkedElement[element.name] = element.linkedElement;
         }
         if (this.data) {
           formsControls[element.name] = [
