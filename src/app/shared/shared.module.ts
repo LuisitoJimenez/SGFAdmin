@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +31,12 @@ import { WebcamModule } from 'ngx-webcam';
 import { CameraComponent } from './components/camera/camera.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+
+//test
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+
+//test autocomplete
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -69,7 +75,14 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     MatListModule,
     MatExpansionModule,
     WebcamModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatChipsModule,
+    AsyncPipe,
+    MatSlideToggleModule
   ],
   exports: [
     MatFormFieldModule,

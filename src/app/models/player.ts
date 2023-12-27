@@ -36,3 +36,10 @@ export interface SubModel {
   name: string;
   age: number;
 }
+
+export interface TeamModel {
+  teamName: String;
+  genderId: number;
+  subId: number;
+  coachName: String;
+}

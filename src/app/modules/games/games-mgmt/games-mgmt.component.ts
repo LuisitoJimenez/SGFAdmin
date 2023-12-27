@@ -133,7 +133,8 @@ export class GamesMgmtComponent implements OnInit{
   getSubsOptions() {
     this.accessService.getSubsList().subscribe({
       next: (result) => {
-        const options: optionsElement[] = result.map((sub) => {
+        console.log(result);
+        /* const options: optionsElement[] = result.map((sub) => {
           const option: optionsElement = {
             value: sub.id,
             label: sub.name
@@ -147,7 +148,7 @@ export class GamesMgmtComponent implements OnInit{
               element.options = options;
             }
           });
-        });
+        }); */
       },
       error: (error) => { }
     });

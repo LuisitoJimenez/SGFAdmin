@@ -55,6 +55,38 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         element: FormElement.input,
         disabled: false,
         hidden: false,
+        label: 'Nombre del equipo',
+        name: 'name',
+        type: ElementType.text,
+        placeholder: 'Nombre',
+        readonly: false,
+        validation: {
+          required: true
+        },
+        validationMsg: 'El nombre es requerido',
+        value: ''
+      },
+      {
+        colClass: 'col-sm-',
+        element: FormElement.input,
+        disabled: false,
+        hidden: false,
+        label: 'Director técnico',
+        name: 'coach',
+        type: ElementType.text,
+        placeholder: 'Nombre',
+        readonly: false,
+        validation: {
+          required: true
+        },
+        validationMsg: 'El nombre es requerido',
+        value: ''
+      },
+      {
+        colClass: 'col-sm-6',
+        element: FormElement.input,
+        disabled: false,
+        hidden: false,
         label: 'Club',
         name: 'club',
         type: ElementType.text,
@@ -100,6 +132,7 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         },
         validationMsg: 'Requerido'
       },
+      
     ],
     panelTitle: 'Datos del equipo',
     panelDescription: 'Completa los datos del equipo',
@@ -116,16 +149,16 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     content: [
       {
         colClass: 'col-sm-12',
-        element: FormElement.list,
+        element: FormElement.chip,
         disabled: false,
         hidden: false,
-        label: '',
+        label: 'Jugador titular',
         options: [],
         multiple: true,
         name: 'titularPlayers',
         readonly: false,
         validation: {
-          required: false
+          required: true
         },
       }
     ],
@@ -144,16 +177,16 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     content: [
       {
         colClass: 'col-sm-12',
-        element: FormElement.list,
+        element: FormElement.chip,
         disabled: false,
         hidden: false,
-        label: '',
+        label: 'Jugador suplente',
         options: [],
         multiple: true,
         name: 'substitutePlayers',
         readonly: false,
         validation: {
-          required: false
+          required: true
         },
       }
     ],
@@ -163,5 +196,33 @@ export const teamFormDefinition: DefinitionAccordion[] = [
     step: 3,
     hidden: false,
     disabled: false
-  }
+  }/* ,
+  {
+    btnNextHidden: true,
+    btnPrevLabel: 'Anterior',
+    btnPrevDisabled: false,
+    btnNextDisabled: false,
+    content: [
+      {
+        colClass: 'col-sm-12',
+        element: FormElement.chip,
+        disabled: false,
+        hidden: false,
+        label: 'Jugadores titulares',
+        options: [],
+        multiple: true,
+        name: 'team1',
+        readonly: false,
+        validation: {
+          required: true
+        },
+      }
+    ],
+    panelTitle: 'Jugadores suplentes',
+    panelDescription: 'Selecciona los jugadores suplentes',
+    panelIcon: 'check_circle',
+    step: 4,
+    hidden: false,
+    disabled: false
+  } */
 ];

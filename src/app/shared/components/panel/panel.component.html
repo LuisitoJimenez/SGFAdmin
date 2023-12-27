@@ -11,16 +11,16 @@
           </mat-panel-title>
           <mat-panel-description>
             {{ steps.panelDescription }}
-<!--             <mat-icon [style.color]="panelIcon === [steps.panelIcon] ? '' : (isPanelValid(steps) ? 'green' : 'orange')">
+            <!--             <mat-icon [style.color]="panelIcon === [steps.panelIcon] ? '' : (isPanelValid(steps) ? 'green' : 'orange')">
               {{ panelIcon || steps.panelIcon }}
             </mat-icon> -->
-<!--             <mat-icon [style.color]="isPanelValid(steps) ? 'green' : 'orange'">
+            <!--             <mat-icon [style.color]="isPanelValid(steps) ? 'green' : 'orange'">
               {{ panelIcon || steps.panelIcon }}
             </mat-icon> -->
             <mat-icon [style.color]="isPanelValid(steps) ? 'green' : ''">
               {{ steps.panelIcon }}
             </mat-icon>
-<!--             <mat-icon>
+            <!--             <mat-icon>
               {{ steps.panelIcon}}
             </mat-icon> -->
           </mat-panel-description>
@@ -112,20 +112,78 @@
       </div>
       }
       @case ('filter') {
-        <div>
-          <mat-form-field style="width: 100%">
-            <mat-label> {{ element.label }} </mat-label>
-            <mat-select [formControlName]="element.name" (selectionChange)="applyFilter2($event, element.name)">
-              @for (option of element.options; track option) {
-              <mat-option [value]="option.value"> {{ option.label }}</mat-option>
-              }
-            </mat-select>
-            @if (form.get(element.name)?.hasError('required') && form.get(element.name)?.touched) {
-            <mat-hint class="error">{{
-              element.validationMsg }}</mat-hint>
+      <div>
+        <mat-form-field style="width: 100%">
+          <mat-label> {{ element.label }} </mat-label>
+          <mat-select [formControlName]="element.name" (selectionChange)="applyFilter2($event, element.name)">
+            @for (option of element.options; track option) {
+            <mat-option [value]="option.value"> {{ option.label }}</mat-option>
             }
-          </mat-form-field>
-        </div>
+          </mat-select>
+          @if (form.get(element.name)?.hasError('required') && form.get(element.name)?.touched) {
+          <mat-hint class="error">{{
+            element.validationMsg }}</mat-hint>
+          }
+        </mat-form-field>
+      </div>
+      }
+      @case('chip') {
+      <div>
+        <mat-form-field style="width: 100%" >
+          <mat-label>{{ element.label }}</mat-label>
+          <mat-chip-grid #chipGrid aria-label="Fruit selection" [formControlName]="element.name">
+            @for (fruit of fruits[element.name]; track fruit) {
+            <mat-chip-row (removed)="remove(fruit, element.name)" [value]="fruit.value">
+              {{fruit.label}}
+              <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input placeholder="Buscar" #fruitInput [formControl]="fruitCtrl" (keyup)="applyFilter($event, element.name)" [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"/>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, element.name)">
+            @for (option of filteredOptions[element.name]; track option) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      }
+      @case('autocomplete') {
+      <div>
+        <mat-form-field class="example-full-width">
+          <mat-label>Assignee</mat-label>
+          <input type="text" matInput [formControlName]="element.name" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" >
+            @for (option of filteredOptions[element.name]; track option) {
+              <mat-option [value]="option.value">{{option.label}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        <!-- <mat-form-field class="example-full-width" [formControlName]="element.name">
+          <mat-label>State</mat-label>
+          <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+          <mat-autocomplete #auto="matAutocomplete">
+            @for (option of filteredOptions[element.name]; track option) {
+            <mat-option [value]="state.name">
+              <img alt="" class="example-option-img" [src]="state.flag" height="30">&nbsp;
+              <span>{{state.name}}</span> |
+                  <small>Population: {{state.population}}</small>
+            </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field> -->
+
+        <br>
+
+<!--         <mat-slide-toggle [checked]="stateCtrl.disabled"
+          (change)="stateCtrl.disabled ? stateCtrl.enable() : stateCtrl.disable()">
+          Disable Input?
+        </mat-slide-toggle> -->
+      </div>
       }
       }
     </ng-template>

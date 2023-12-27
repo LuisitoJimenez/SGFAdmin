@@ -7,3 +7,9 @@
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
+<div class="list">
+  @for (team of teamsList; track team) {
+  <app-card [imageSrc]="imageSrc" [cardData]="team" [cardDefinition]="cardDefinition"
+    (deleteItem)="deleteTeam($event)" (editItem)="handleTeamOperation($event)"></app-card>
+  }
+</div>

@@ -4,7 +4,9 @@ export enum FormElement {
   picker = 'picker',
   list = 'list',
   upload = 'upload',
-  filter = 'filter'
+  filter = 'filter',
+  chip = 'chip',
+  autocomplete = 'autocomplete'
 }
 
 export enum ElementType {

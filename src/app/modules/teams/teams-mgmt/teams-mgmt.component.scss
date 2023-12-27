@@ -4,7 +4,7 @@
 }
 
 .toolbar-span {
-  font-size: 14px
+  font-size: 14px;
 }
 
 .toolbar-image {
@@ -20,4 +20,21 @@
   height: 35px;
   line-height: 35px;
   margin: 5px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 350px);
+  gap: 1em;
+  justify-content: center;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 350px);
+  gap: 1em;
+  justify-content: center;
+  width: 100%;
+  margin: auto;
+  margin-top: 2em;
 }
