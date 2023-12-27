@@ -85,7 +85,6 @@ export class PlayersMgmtComponent implements OnInit {
 
   getDefinition(): void {
     this.definitionService.getPlayerDefinition().subscribe((result) => {
-      console.log(result);
       this.form.definition = JSON.parse(result);
       console.log(this.form.definition);
     })
