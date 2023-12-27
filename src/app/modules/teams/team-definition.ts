@@ -17,7 +17,7 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         multiple: false,
         name: 'clubs',
         readonly: false,
-        linkedElement: 'team',
+        linkedElement: 'club',
         validation: {
           required: false
         },
@@ -55,10 +55,42 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         element: FormElement.input,
         disabled: false,
         hidden: false,
-        label: 'Equipo',
-        name: 'team',
+        label: 'Nombre del equipo',
+        name: 'name',
         type: ElementType.text,
-        placeholder: 'Equipo',
+        placeholder: 'Nombre',
+        readonly: false,
+        validation: {
+          required: true
+        },
+        validationMsg: 'El nombre es requerido',
+        value: ''
+      },
+      {
+        colClass: 'col-sm-',
+        element: FormElement.input,
+        disabled: false,
+        hidden: false,
+        label: 'Director técnico',
+        name: 'coach',
+        type: ElementType.text,
+        placeholder: 'Nombre',
+        readonly: false,
+        validation: {
+          required: true
+        },
+        validationMsg: 'El nombre es requerido',
+        value: ''
+      },
+      {
+        colClass: 'col-sm-6',
+        element: FormElement.input,
+        disabled: false,
+        hidden: false,
+        label: 'Club',
+        name: 'club',
+        type: ElementType.text,
+        placeholder: 'Club',
         readonly: true,
         validation: {
           required: true
@@ -100,6 +132,7 @@ export const teamFormDefinition: DefinitionAccordion[] = [
         },
         validationMsg: 'Requerido'
       },
+      
     ],
     panelTitle: 'Datos del equipo',
     panelDescription: 'Completa los datos del equipo',
