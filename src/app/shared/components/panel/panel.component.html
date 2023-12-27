@@ -154,26 +154,35 @@
       }
       @case('autocomplete') {
       <div>
-        <mat-form-field class="example-full-width" [formControlName]="element.name">
-          <mat-label>State</mat-label>
-          <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
-          <mat-autocomplete #auto="matAutocomplete">
-            @for (state of filteredStates | async; track state) {
-            <mat-option [value]="state.name">
-              <img alt="" class="example-option-img" [src]="state.flag" height="30">&nbsp;
-              <span>{{state.name}}</span> <!-- |
-                  <small>Population: {{state.population}}</small> -->
-            </mat-option>
+        <mat-form-field class="example-full-width">
+          <mat-label>Assignee</mat-label>
+          <input type="text" matInput [formControlName]="element.name" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" >
+            @for (option of filteredOptions[element.name]; track option) {
+              <mat-option [value]="option.value">{{option.label}}</mat-option>
             }
           </mat-autocomplete>
         </mat-form-field>
+        <!-- <mat-form-field class="example-full-width" [formControlName]="element.name">
+          <mat-label>State</mat-label>
+          <input matInput aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+          <mat-autocomplete #auto="matAutocomplete">
+            @for (option of filteredOptions[element.name]; track option) {
+            <mat-option [value]="state.name">
+              <img alt="" class="example-option-img" [src]="state.flag" height="30">&nbsp;
+              <span>{{state.name}}</span> |
+                  <small>Population: {{state.population}}</small>
+            </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field> -->
 
         <br>
 
-        <mat-slide-toggle [checked]="stateCtrl.disabled"
+<!--         <mat-slide-toggle [checked]="stateCtrl.disabled"
           (change)="stateCtrl.disabled ? stateCtrl.enable() : stateCtrl.disable()">
           Disable Input?
-        </mat-slide-toggle>
+        </mat-slide-toggle> -->
       </div>
       }
       }
