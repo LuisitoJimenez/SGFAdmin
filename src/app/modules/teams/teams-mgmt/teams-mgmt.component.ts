@@ -1,10 +1,14 @@
 import { AccessService } from './../../../services/access.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { min } from 'rxjs';
+import { CardModel } from 'src/app/models/CardModel';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
 import { DefinitionService } from 'src/app/services/definition.service';
+import { TeamService } from 'src/app/services/team.service';
 import { PanelComponent } from 'src/app/shared/components/panel/panel.component';
+import { SnackbarComponent } from 'src/app/shared/components/snackbar/snackbar.component';
 
 @Component({
   selector: 'app-teams-mgmt',
@@ -13,10 +17,12 @@ import { PanelComponent } from 'src/app/shared/components/panel/panel.component'
 })
 export class TeamsMgmtComponent implements OnInit {
 
+  imageSrc!: { url: string, itemId: number };
   clubsList: any[] = [];
   operation: string = '';
   openStep: number = 0;
   optionsSubs: any[] = [];
+  teamsList: any[] = [];
   titleModule: string = 'Equipos';
 
   form: any = {
@@ -24,15 +30,36 @@ export class TeamsMgmtComponent implements OnInit {
     data: []
   };
 
+  cardDefinition: CardModel = {
+    title: 'name',
+    subtitle: 'gender',
+    image: '',
+    labels: [
+       'Club',
+       'Coach',
+       'Sub'
+    ],
+    values: [
+      { element: 'club'},
+      { element: 'coach'},
+      { element: 'sub'},
+    ],
+    showLabels: true,
+    showImage: false
+  };
+
   constructor(
     private accessService: AccessService,
+    private teamService: TeamService,
     private definitionService: DefinitionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
+    this.getTeamList();
     this.getDefinition();
-    this.getClubsOptions();    
+    this.getClubsOptions();
     this.getSubsOptions();
     this.getPlayersOptions();
     this.getGenderOptions();
@@ -43,7 +70,23 @@ export class TeamsMgmtComponent implements OnInit {
       next: (result) => {
         this.form.definition = JSON.parse(result);
       },
-      error: (error) => { }
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getTeamList() {
+    this.teamService.getTeamList().subscribe({
+      next: (result: any) => {
+        if (result.success) {
+          console.log(result.data);
+          this.teamsList = result.data;
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 
@@ -67,7 +110,9 @@ export class TeamsMgmtComponent implements OnInit {
           });
         }
       },
-      error: (error) => { }
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 
@@ -126,7 +171,7 @@ export class TeamsMgmtComponent implements OnInit {
   }
 
   calculateSub(age: number, subs: any[]): any {
-    const subId = subs.find(sub => age >= sub.minAge && age <= sub.maxAge)?.value;    
+    const subId = subs.find(sub => age >= sub.minAge && age <= sub.maxAge)?.value;
     return subId ? subId : null;
   }
 
@@ -148,9 +193,66 @@ export class TeamsMgmtComponent implements OnInit {
       if (result && this.operation === 'Editar' && teamId) {
         console.log(teamId);
         console.log(result.data);
+        this.updateTeam(teamId, result.data);
       } else if (result && this.operation === 'Agregar') {
         console.log(teamId);
         console.log(result.data);
+        this.addTeam(result.data, result.data.clubs[0]);
+      }
+    });
+  }
+
+  addTeam(team: any, clubId: number): void {
+    console.log(team, clubId);
+    const body = {
+      teamName: team.name,
+      coachName: team.coach,
+      genderId: team.gender,
+      subId: team.sub,
+    }
+    console.log(body);
+    this.teamService.addTeam(body, clubId).subscribe({
+      next: (result) => {
+        this.showSnackBar('Equipo agregado correctamente', 'check_circle', 'green');
+        setTimeout(() => {
+          this.getTeamList();
+        }, 1000);
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al agregar equipo', 'error', 'red');
+      }
+    });
+  }
+
+  deleteTeam(teamId: number): void {
+    this.teamService.deleteTeam(teamId).subscribe({
+      next: (result) => {
+        this.getTeamList();
+        this.showSnackBar('Equipo eliminado correctamente', 'check_circle', 'success');
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al eliminar equipo', 'error', 'red');
+      }
+    });
+  }
+
+  updateTeam(teamId: number, team: any) {
+    const body = {
+      teamName: team.name,
+      coachName: team.coach,
+      genderId: team.gender,
+      subId: team.sub,
+    }
+    this.teamService.updateTeam(body, teamId).subscribe({
+      next: (result) => {
+        this.getTeamList();
+        this.showSnackBar('Equipo actualizado correctamente', 'check_circle', 'green');
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al actualizar equipo', 'error', 'red');
       }
     });
   }
@@ -158,15 +260,53 @@ export class TeamsMgmtComponent implements OnInit {
   handleTeamOperation(teamId?: number): void {
     if (teamId) {
       this.operation = 'Editar';
+      this.form.definition.forEach((step: any) => {
+        step.content.forEach((element: any) => {
+          if (element.name === 'clubs') {
+            step.hidden = true;
+            element.hidden = true;
+          }
+          if (element.name === 'id') {
+            element.readonly = true;
+            element.disabled = false;
+          }
+        });
+      });
       this.getTeamData(teamId);
     } else {
       this.operation = 'Agregar';
       this.form.data = [];
+      this.form.definition.forEach((step: any) => {
+        step.content.forEach((element: any) => {
+          if (element.name === 'users') {
+            step.hidden = false;
+            element.hidden = false;
+          }
+          if (element.name === 'id') {
+            element.readonly = true;
+            element.disabled = true;
+          }
+        });
+      });
       this.openOperationDialog();
     }
   }
 
-  getTeamData(teamId: number): void { }
+  getTeamData(teamId: number): void {
+    this.teamService.getTeamData(teamId).subscribe({
+      next: (result) => {
+        console.log(result);
+        if (result.success) {
+          this.form.data = result.data;
+          this.openOperationDialog(teamId);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+    this.openStep = 1;
+  }
 
   getGenderOptions() {
     this.accessService.getGendersList().subscribe((result) => {
@@ -239,6 +379,16 @@ export class TeamsMgmtComponent implements OnInit {
       error: (error) => {
         console.log(error);
       }
+    });
+  }
+
+  showSnackBar(message: string, snackIcon: string, iconColor: string) {
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      data: { message: message, snackIcon: snackIcon, iconColor: iconColor },
+      duration: 1000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['center-message']
     });
   }
 
