@@ -555,10 +555,11 @@ export class PanelComponent {
     return this.states.filter(state => state.name.toLowerCase().includes(filterValue));
   }
 
-  displayFn(option: any): string {
-    console.log(option);
-    console.log(option.label);
+/*   displayFn(option: any): string {
     return option ? option.label : '';
-  }
+  } */
 
+  displayFn(value: any): string {
+    return value ? value.label : '';
+  }
 }
