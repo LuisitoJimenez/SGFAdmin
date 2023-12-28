@@ -38,7 +38,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         value: ''
       },
       {
-        colClass: 'col-sm-7',
+        colClass: 'col-sm-5',
         element: FormElement.input,
         disabled: false,
         hidden: false,
@@ -57,7 +57,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         name: 'date',
         label: ' Fecha',
         element: FormElement.picker,
-        colClass: 'col-sm-5',
+        colClass: 'col-sm-4',
         disabled: false,
         hidden: false,
         readonly: false,
@@ -72,7 +72,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         label: 'Hora',
         placeholder: 'Hora',
         element: FormElement.time,
-        colClass: 'col-sm-6',
+        colClass: 'col-sm-3',
         disabled: false,
         hidden: false,
         readonly: false,
