@@ -32,6 +32,8 @@ import { CameraComponent } from './components/camera/camera.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
+import {NgxMatTimepickerModule} from 'ngx-mat-timepicker'; 
+
 //test
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 
@@ -82,7 +84,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     ReactiveFormsModule,
     MatChipsModule,
     AsyncPipe,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NgxMatTimepickerModule
   ],
   exports: [
     MatFormFieldModule,
