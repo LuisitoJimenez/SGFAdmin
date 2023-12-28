@@ -5,6 +5,7 @@ import { PanelComponent } from 'src/app/shared/components/panel/panel.component'
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
+import { TeamService } from 'src/app/services/team.service';
 
 export interface optionsGroup {
   letter: string;
@@ -36,14 +37,15 @@ export class GamesMgmtComponent implements OnInit{
     private definitionService: DefinitionService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
+    private teamsService: TeamService 
   ) { }
-
   ngOnInit(): void {
     this.getGamesList();
     this.getDefinition();
     this.getGenderOptions();
     this.getSubsOptions();
-    this.getClubsOptions();
+    this.getTeamsOptions();
+    //this.teamsService.getTeamList();
   }
 
   getDefinition(): void {
@@ -75,8 +77,8 @@ export class GamesMgmtComponent implements OnInit{
 
   }
 
-  getClubsOptions(): void {
-    this.accessService.getClubsList().subscribe({
+  getTeamsOptions(): void {
+    this.teamsService.getTeamList().subscribe({
       next: (result: any) => {
         if (result.success) {
           const options: OptionsElement[] = result.data.map((club: any) => {
@@ -130,13 +132,13 @@ export class GamesMgmtComponent implements OnInit{
 
           this.form.definition.forEach((step: any) => {
             step.content.forEach((element: any) => {
-              if (element.name === 'clubOne') {
+/*               if (element.name === 'clubOne') {
                 element.options = options;
               }
 
               if (element.name === 'clubTwo') {
                 element.options = options;
-              }
+              } */
 
               if (element.name === 'team1') {
                 element.options = this.optionsGroup;
