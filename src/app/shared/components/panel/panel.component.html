@@ -102,6 +102,7 @@
           }
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <!-- mat-timepicker-toggle></mat-timepicker-toggle> -->
         </mat-form-field>
       </div>
       }
@@ -129,7 +130,7 @@
       }
       @case('chip') {
       <div>
-        <mat-form-field style="width: 100%" >
+        <mat-form-field style="width: 100%">
           <mat-label>{{ element.label }}</mat-label>
           <mat-chip-grid #chipGrid aria-label="Fruit selection" [formControlName]="element.name">
             @for (fruit of fruits[element.name]; track fruit) {
@@ -141,9 +142,9 @@
             </mat-chip-row>
             }
           </mat-chip-grid>
-          <input placeholder="Buscar" #fruitInput [formControl]="fruitCtrl" (keyup)="applyFilter($event, element.name)" [matChipInputFor]="chipGrid"
-            [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)"/>
+          <input placeholder="Buscar" #fruitInput [formControl]="fruitCtrl" (keyup)="applyFilter($event, element.name)"
+            [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)" />
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, element.name)">
             @for (option of filteredOptions[element.name]; track option) {
             <mat-option [value]="option.value">{{ option.label }}</mat-option>
@@ -152,14 +153,14 @@
         </mat-form-field>
       </div>
       }
-      @case('autocomplete') {
+      @case('autocomplete1') {
       <div>
         <mat-form-field class="example-full-width">
           <mat-label>Assignee</mat-label>
           <input type="text" matInput [formControlName]="element.name" [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" >
+          <mat-autocomplete #auto="matAutocomplete">
             @for (option of filteredOptions[element.name]; track option) {
-              <mat-option [value]="option.value">{{option.label}}</mat-option>
+            <mat-option [value]="option.value">{{option.label}}</mat-option>
             }
           </mat-autocomplete>
         </mat-form-field>
@@ -179,10 +180,42 @@
 
         <br>
 
-<!--         <mat-slide-toggle [checked]="stateCtrl.disabled"
+        <!--         <mat-slide-toggle [checked]="stateCtrl.disabled"
           (change)="stateCtrl.disabled ? stateCtrl.enable() : stateCtrl.disable()">
           Disable Input?
         </mat-slide-toggle> -->
+      </div>
+      }
+      @case('time') {
+      <div>
+        <mat-form-field class="example-full-width">
+          <mat-label>{{element.label}}</mat-label>
+          <input type="text" [placeholder]="element.placeholder" aria-label="Number" matInput [matAutocomplete]="auto"
+            [formControlName]="element.name">
+          <mat-autocomplete #auto="matAutocomplete" hideSingleSelectionIndicator>
+            @for (hour of hours; track hour) {
+            <mat-option [value]="hour">{{hour}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      }
+      @case('autocomplete') {
+      <div>
+        <mat-form-field style="width: 100%">
+          <mat-label>{{element.label}}</mat-label>
+          <input type="text" matInput required [matAutocomplete]="autoGroup" [formControlName]="element.name" (keyup)="applyFilter3($event, element.name)">
+          <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn">
+            @for (group of filteredOptions[element.name]; track group) {
+            <mat-optgroup [label]="group.letter">
+              @for (option of group.option; track option) {
+              <mat-option [value]="option.value">{{option.label}}</mat-option>
+              }
+            </mat-optgroup>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+        
       </div>
       }
       }
