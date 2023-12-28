@@ -6,6 +6,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
 
+export interface optionsGroup {
+  letter: string;
+  option: { value: string; label: string }[];
+}
+
 @Component({
   selector: 'app-games-mgmt',
   templateUrl: './games-mgmt.component.html',
@@ -21,6 +26,10 @@ export class GamesMgmtComponent implements OnInit{
   operation: string = '';
   openStep: number = 0;
   titleModule: string = 'Partidos';
+  optionsSubs: any[] = [];
+
+   optionsGroup: optionsGroup[] = [];
+
 
   constructor(
     private accessService: AccessService,
@@ -78,6 +87,47 @@ export class GamesMgmtComponent implements OnInit{
             return option;
           });
 
+          console.log(options);
+
+          options.sort((a, b) => {
+            // Extrae la parte de la etiqueta que sigue al número
+            let labelPartA = a.label.split(' ')[1];
+            let labelPartB = b.label.split(' ')[1];
+          
+            // Compara las partes de las etiquetas para determinar el orden
+            if (labelPartA < labelPartB) {
+              return -1;
+            } else if (labelPartA > labelPartB) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          console.log(options);
+
+          options.forEach(option => {
+            // Extrae la parte de la etiqueta que sigue al número
+            let labelPart = option.label.split(' ')[1];
+          
+            // Extrae la primera letra de esta parte de la etiqueta
+            let firstLetter = labelPart.charAt(0);
+          
+            // Busca un grupo existente con la misma letra
+            let group = this.optionsGroup.find(group => group.letter === firstLetter);
+          
+            // Si no existe un grupo con la misma letra, crea uno nuevo
+            if (!group) {
+              group = { letter: firstLetter, option: [] };
+              this.optionsGroup.push(group);
+            }
+          
+            // Añade la opción al grupo
+            group.option.push(option);
+          });
+          
+          console.log(this.optionsGroup);
+
           this.form.definition.forEach((step: any) => {
             step.content.forEach((element: any) => {
               if (element.name === 'clubOne') {
@@ -87,6 +137,15 @@ export class GamesMgmtComponent implements OnInit{
               if (element.name === 'clubTwo') {
                 element.options = options;
               }
+
+              if (element.name === 'team1') {
+                element.options = this.optionsGroup;
+              }
+
+              if (element.name === 'team2') {
+                element.options = this.optionsGroup;
+              }
+
             });
           });
 
@@ -130,29 +189,6 @@ export class GamesMgmtComponent implements OnInit{
     });
   }
 
-  getSubsOptions() {
-    this.accessService.getSubsList().subscribe({
-      next: (result) => {
-        console.log(result);
-        /* const options: optionsElement[] = result.map((sub) => {
-          const option: optionsElement = {
-            value: sub.id,
-            label: sub.name
-          };
-          return option;
-        });
-        console.log(options);
-        this.form.definition.forEach((step: any) => {
-          step.content.forEach((element: any) => {
-            if (element.name === 'subs') {
-              element.options = options;
-            }
-          });
-        }); */
-      },
-      error: (error) => { }
-    });
-  }
 
   openOperationDialog(gameId?: number) {
     console.log(gameId);
@@ -220,6 +256,54 @@ export class GamesMgmtComponent implements OnInit{
       });
       this.openOperationDialog();
     }
+  }
+
+  getSubsOptions() {
+    this.accessService.getSubsList().subscribe({
+      next: (result) => {
+        console.log(result);
+        if (result.success) {
+          console.log(result.data);
+          this.optionsSubs = result.data.map((sub: any) => {
+            const option = {
+              value: sub.id,
+              label: sub.name,
+              minAge: sub.minAge,
+              maxAge: sub.maxAge
+            }
+            return option;
+          });
+
+          this.form.definition.forEach((step: any) => {
+            step.content.forEach((element: any) => {
+              if (element.name === 'sub') {
+                element.options = this.optionsSubs;
+              }
+            });
+          });
+          console.log(this.optionsSubs);
+        }
+        /*         const options: optionsElement[] = result.map((sub) => {
+                  const option: any = {
+                    value: sub.id,
+                    label: sub.name,
+                    //sub: sub.age
+                  };
+                  return option;
+                });
+                console.log(options);
+                this.form.definition.forEach((step: any) => {
+                  step.content.forEach((element: any) => {
+                    if (element.name === 'sub') {
+                      element.options = options;
+                    }
+                  });
+                }); */
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 
   showSnackBar(message: string) {

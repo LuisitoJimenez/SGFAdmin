@@ -6,7 +6,8 @@ export enum FormElement {
   upload = 'upload',
   filter = 'filter',
   chip = 'chip',
-  autocomplete = 'autocomplete'
+  autocomplete = 'autocomplete',
+  time = 'time'
 }
 
 export enum ElementType {
