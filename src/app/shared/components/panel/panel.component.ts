@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, map, of, startWith } from 'rxjs';
 import { DefinitionAccordion } from 'src/app/models/definition';
 
 //test
@@ -19,6 +19,11 @@ export interface State {
   population: string;
 }
 
+
+export interface optionsGroup {
+  letter: string;
+  option: { value: string; label: string }[];
+}
 
 @Component({
   selector: 'app-panel',
@@ -57,6 +62,9 @@ export class PanelComponent {
   linkedElement: string[] = [];
   imageUrl2: string = '';
   fileUrl: string = '';
+  //filteredHours!: Observable<string[]>;
+  //groupOptions: Observable<optionsGroup[]>[]= [];
+
 
 
   //filteredFruits: Observable<string[]>;
@@ -92,11 +100,18 @@ export class PanelComponent {
     );
  */
     //test autocomplete
-    this.filteredStates = this.stateCtrl.valueChanges.pipe(
+/*     this.filteredHours = this.form.get('time')!.valueChanges.pipe(
       startWith(''),
-      map(state => (state ? this._filterStates(state) : this.states.slice())),
-    );
+      map(value => this._filterHours(value))
+    ); */
+
   }
+
+/*   private _filterHours(value: string): string[] {
+    //const filterValue = value.toLowerCase();
+  
+    return this.hours.filter(hour => hour.toLowerCase().includes(value));
+  } */
 
   setStep(index: number) {
     this.openStep = index;
@@ -110,6 +125,8 @@ export class PanelComponent {
     this.openStep--;
   }
 
+  hours: string[] = [];
+
   ngOnInit(): void {
     this.createForm();
     if (this.userId) {
@@ -118,7 +135,24 @@ export class PanelComponent {
     this.imageUrl2 = this.data.itemData.imagePlayer;
     this.initialDataClone = JSON.parse(JSON.stringify(this.initialData));
 
+/*     if (this.form.get('time')) {
+      this.filteredHours = this.form.get('time')!.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, this.hours))
+      );
+      console.log(this.filteredHours);
+    } else {
+      this.filteredHours = of([]);
+    }
+
+    this.filteredHours.subscribe(values => {
+      console.log(values);
+    }); */
+
+
+    
   }
+
 
   onSelectionChange(event: any, element: any) {
     const selectedOption = event.options[0].value;
@@ -147,8 +181,11 @@ export class PanelComponent {
   }
 
   applyFilter(event: Event, element: any) {
+    console.log((event.target as HTMLInputElement).value);
+    console.log(element);
     const filterWords = this.removeAccents((event.target as HTMLInputElement).value.trim().toLowerCase()).split(' ');
     this.filteredOptions[element] = this.options[element].filter((option: any) => {
+      console.log(option);
       const optionWords = this.removeAccents(option.label.toLowerCase()).split(' ');
       const matchesSearchFilter = filterWords.every(filterWord => optionWords.some(optionWord => optionWord.startsWith(filterWord)));
       const matchesSelectFilters = Object.keys(this.appliedFilters).every(filterField => {
@@ -173,6 +210,31 @@ export class PanelComponent {
     });
   }
 
+  applyFilter3(event: Event, element: any) {
+    console.log((event.target as HTMLInputElement).value);
+    console.log(element);
+    const filterWords = this.removeAccents((event.target as HTMLInputElement).value.trim().toLowerCase()).split(' ');
+  
+    this.filteredOptions[element] = this.options[element].map((group: any) => {
+      // Filtra las opciones dentro de cada grupo
+      const filteredGroup = {
+        ...group,
+        option: group.option.filter((option: any) => {
+          console.log(option);
+          const optionWords = this.removeAccents(option.label.toLowerCase()).split(' ');
+          const matchesSearchFilter = filterWords.every(filterWord => optionWords.some(optionWord => optionWord.startsWith(filterWord)));
+          const matchesSelectFilters = Object.keys(this.appliedFilters).every(filterField => {
+            return option[filterField] === this.appliedFilters[filterField];
+          });
+          return matchesSearchFilter && matchesSelectFilters;
+        })
+      };
+  
+      // Solo devuelve el grupo si tiene al menos una opción después del filtrado
+      return filteredGroup.option.length > 0 ? filteredGroup : null;
+    }).filter((group: any) => group !== null);  // Elimina los grupos vacíos
+  }
+
   removeAccents(str: string) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
@@ -189,6 +251,8 @@ export class PanelComponent {
   }
 
   createForm(): void {
+
+
     const formsControls: { [key: string]: any } = {};
     this.definition?.forEach((step: any) => {
       step.content.forEach((element: any) => {
@@ -225,11 +289,35 @@ export class PanelComponent {
           console.log(this.originalOptions[element.name]);
           console.log(this.linkedElement[element.name]);
         }
-        if (element.element === 'autocomplete') {
+/*         if (element.element === 'autocomplete') {
           this.options[element.name] = element.options;
           this.filteredOptions[element.name] = element.options;
           //this.originalOptions[element.name] = [...element.options];
           //this.linkedElement[element.name] = element.linkedElement;
+        } */
+
+        if (element.element === 'autocomplete') {
+          console.log(element.name);
+          this.options[element.name] = element.options;
+          this.originalOptions[element.name] = [...element.options];
+          this.filteredOptions[element.name] = element.options;
+          console.log(this.filteredOptions[element.name]);
+          console.log(this.filteredOptions);
+          //this.groupOptions[element.name] = element.options;
+          
+         /*  console.log(this.groupOptions[element.name]);         
+          console.log(this.groupOptions);
+          console.log(this.groupOptions[element.name]); */
+
+        }
+        if (element.element === 'time') {
+          for(let i = 0; i < 24; i++) {
+            for(let j = 0; j < 60; j+=60) {
+              let hour = i + ':' + j.toString().padStart(2, '0');
+              this.hours.push(hour);
+            }
+          }
+          console.log(this.hours);
         }
         if (this.data) {
           formsControls[element.name] = [
@@ -430,7 +518,7 @@ export class PanelComponent {
 
   //test autocomplete
   stateCtrl = new FormControl('');
-  filteredStates: Observable<State[]>;
+  filteredStates!: Observable<State[]>;
 
   states: State[] = [
     {
@@ -465,6 +553,12 @@ export class PanelComponent {
     const filterValue = value.toLowerCase();
 
     return this.states.filter(state => state.name.toLowerCase().includes(filterValue));
+  }
+
+  displayFn(option: any): string {
+    console.log(option);
+    console.log(option.label);
+    return option ? option.label : '';
   }
 
 }
