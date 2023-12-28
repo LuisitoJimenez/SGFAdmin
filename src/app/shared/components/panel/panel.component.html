@@ -188,7 +188,7 @@
       }
       @case('time') {
       <div>
-        <mat-form-field class="example-full-width">
+        <mat-form-field style="width: 100%;">
           <mat-label>{{element.label}}</mat-label>
           <input type="text" [placeholder]="element.placeholder" aria-label="Number" matInput [matAutocomplete]="auto"
             [formControlName]="element.name">
@@ -209,7 +209,7 @@
             @for (group of filteredOptions[element.name]; track group) {
             <mat-optgroup [label]="group.letter">
               @for (option of group.option; track option) {
-              <mat-option [value]="option.value">{{option.label}}</mat-option>
+              <mat-option [value]="option">{{option.label}}</mat-option>
               }
             </mat-optgroup>
             }
