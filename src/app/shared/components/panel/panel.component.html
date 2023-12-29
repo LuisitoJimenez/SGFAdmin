@@ -188,7 +188,7 @@
       }
       @case('time') {
       <div>
-        <mat-form-field class="example-full-width">
+        <mat-form-field style="width: 100%;">
           <mat-label>{{element.label}}</mat-label>
           <input type="text" [placeholder]="element.placeholder" aria-label="Number" matInput [matAutocomplete]="auto"
             [formControlName]="element.name">
@@ -205,7 +205,7 @@
         <mat-form-field style="width: 100%">
           <mat-label>{{element.label}}</mat-label>
           <input type="text" matInput required [matAutocomplete]="autoGroup" [formControlName]="element.name" (keyup)="applyFilter3($event, element.name)">
-          <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="displayFn">
+          <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="createDisplayFn(element.name)">
             @for (group of filteredOptions[element.name]; track group) {
             <mat-optgroup [label]="group.letter">
               @for (option of group.option; track option) {
@@ -215,7 +215,6 @@
             }
           </mat-autocomplete>
         </mat-form-field>
-        
       </div>
       }
       }

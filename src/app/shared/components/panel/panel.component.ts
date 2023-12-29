@@ -555,10 +555,40 @@ export class PanelComponent {
     return this.states.filter(state => state.name.toLowerCase().includes(filterValue));
   }
 
-  displayFn(option: any): string {
-    console.log(option);
-    console.log(option.label);
+/*   displayFn(option: any): string {
     return option ? option.label : '';
-  }
+  } */
 
+/*   displayFn(value: any): string {
+    console.log(value);
+    return value ? value.label : '';
+  }
+ */
+/*   displayFn(value: number, field: any): string {
+    // Aplana las opciones en un solo array
+    const allOptions = this.options[field].flatMap((group: any) => group.option);
+  
+    // Busca la opción que corresponde al valor
+    const correspondingOption = allOptions.find((option: any) => option.value === value);
+  
+    // Devuelve la etiqueta de la opción correspondiente, o una cadena vacía si no se encontró ninguna opción
+    return correspondingOption ? correspondingOption.label : '';
+  } */
+
+  createDisplayFn(field: any): (value: number) => string {
+    console.log(this.options[field]);
+    return (value: number) => {
+      // Aplana las opciones en un solo array
+      const allOptions = this.options[field].flatMap((group: any) => group.option);
+      console.log(allOptions);
+  
+      // Busca la opción que corresponde al valor
+      const correspondingOption = allOptions.find((option: any) => option.value === value);
+      console.log(correspondingOption);
+  
+      // Devuelve la etiqueta de la opción correspondiente, o una cadena vacía si no se encontró ninguna opción
+      return correspondingOption ? correspondingOption.label : '';
+    };
+  }
+  
 }

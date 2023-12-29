@@ -5,6 +5,8 @@ import { PanelComponent } from 'src/app/shared/components/panel/panel.component'
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
+import { TeamService } from 'src/app/services/team.service';
+import { RefereeService } from 'src/app/services/referee.service';
 
 export interface optionsGroup {
   letter: string;
@@ -16,7 +18,7 @@ export interface optionsGroup {
   templateUrl: './games-mgmt.component.html',
   styleUrls: ['./games-mgmt.component.scss']
 })
-export class GamesMgmtComponent implements OnInit{
+export class GamesMgmtComponent implements OnInit {
 
   form: any = {
     definition: [],
@@ -28,7 +30,7 @@ export class GamesMgmtComponent implements OnInit{
   titleModule: string = 'Partidos';
   optionsSubs: any[] = [];
 
-   optionsGroup: optionsGroup[] = [];
+  optionsGroup: optionsGroup[] = [];
 
 
   constructor(
@@ -36,14 +38,17 @@ export class GamesMgmtComponent implements OnInit{
     private definitionService: DefinitionService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
+    private teamsService: TeamService,
+    private refereeService: RefereeService
   ) { }
-
   ngOnInit(): void {
     this.getGamesList();
     this.getDefinition();
     this.getGenderOptions();
     this.getSubsOptions();
-    this.getClubsOptions();
+    this.getTeamsOptions();
+    this.getRefereeOptions();
+    //this.teamsService.getTeamList();
   }
 
   getDefinition(): void {
@@ -75,14 +80,15 @@ export class GamesMgmtComponent implements OnInit{
 
   }
 
-  getClubsOptions(): void {
-    this.accessService.getClubsList().subscribe({
+  getTeamsOptions(): void {
+    this.teamsService.getTeamList().subscribe({
       next: (result: any) => {
         if (result.success) {
-          const options: OptionsElement[] = result.data.map((club: any) => {
+          const options: OptionsElement[] = result.data.map((team: any) => {
+            console.log(team);
             const option: OptionsElement = {
-              value: club.id,
-              label: `${club.id} ${club.name}`
+              value: team.id,
+              label: `${team.id} ${team.name} ${team.club}`
             };
             return option;
           });
@@ -93,7 +99,7 @@ export class GamesMgmtComponent implements OnInit{
             // Extrae la parte de la etiqueta que sigue al número
             let labelPartA = a.label.split(' ')[1];
             let labelPartB = b.label.split(' ')[1];
-          
+
             // Compara las partes de las etiquetas para determinar el orden
             if (labelPartA < labelPartB) {
               return -1;
@@ -106,37 +112,39 @@ export class GamesMgmtComponent implements OnInit{
 
           console.log(options);
 
+          this.optionsGroup = [];
+
           options.forEach(option => {
             // Extrae la parte de la etiqueta que sigue al número
             let labelPart = option.label.split(' ')[1];
-          
+
             // Extrae la primera letra de esta parte de la etiqueta
             let firstLetter = labelPart.charAt(0);
-          
+
             // Busca un grupo existente con la misma letra
             let group = this.optionsGroup.find(group => group.letter === firstLetter);
-          
+
             // Si no existe un grupo con la misma letra, crea uno nuevo
             if (!group) {
               group = { letter: firstLetter, option: [] };
               this.optionsGroup.push(group);
             }
-          
+
             // Añade la opción al grupo
             group.option.push(option);
           });
-          
+
           console.log(this.optionsGroup);
 
           this.form.definition.forEach((step: any) => {
             step.content.forEach((element: any) => {
-              if (element.name === 'clubOne') {
-                element.options = options;
-              }
-
-              if (element.name === 'clubTwo') {
-                element.options = options;
-              }
+              /*               if (element.name === 'clubOne') {
+                              element.options = options;
+                            }
+              
+                            if (element.name === 'clubTwo') {
+                              element.options = options;
+                            } */
 
               if (element.name === 'team1') {
                 element.options = this.optionsGroup;
@@ -312,6 +320,71 @@ export class GamesMgmtComponent implements OnInit{
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
       panelClass: ['center-message']
+    });
+  }
+
+  getRefereeOptions(): void {
+    this.refereeService.getRefereesOptions().subscribe({
+      next: (result) => {
+        console.log(result);
+        if (result.success) {
+          console.log(result.data);
+          const options = result.data.map((referee: any) => {
+            return {
+              value: referee.id,
+              label: `${referee.id} ${referee.name.first} ${referee.name.last} ${referee.name.secondLast}`
+            }
+          });
+
+          options.sort((a: any, b: any) => {
+            let labelPartA = a.label.split(' ')[1];
+            let labelPartB = b.label.split(' ')[1];
+            if (labelPartA < labelPartB) {
+              return -1;
+            } else if (labelPartA > labelPartB) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          this.optionsGroup = [];
+
+          options.forEach((option: any) => {
+            // Extrae la parte de la etiqueta que sigue al número
+            let labelPart = option.label.split(' ')[1];
+
+            // Extrae la primera letra de esta parte de la etiqueta
+            let firstLetter = labelPart.charAt(0);
+
+            // Busca un grupo existente con la misma letra
+            let group = this.optionsGroup.find(group => group.letter === firstLetter);
+
+            // Si no existe un grupo con la misma letra, crea uno nuevo
+            if (!group) {
+              group = { letter: firstLetter, option: [] };
+              this.optionsGroup.push(group);
+            }
+
+            // Añade la opción al grupo
+            group.option.push(option);
+          });
+
+          console.log(options);
+
+          this.form.definition.forEach((step: any) => {
+            step.content.forEach((element: any) => {
+              if (element.name === 'referee') {
+                element.options = this.optionsGroup;
+              }
+            });
+          });
+          console.log(this.form.definition);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
     });
   }
 }

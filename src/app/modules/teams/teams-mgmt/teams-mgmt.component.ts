@@ -229,7 +229,7 @@ export class TeamsMgmtComponent implements OnInit {
     this.teamService.deleteTeam(teamId).subscribe({
       next: (result) => {
         this.getTeamList();
-        this.showSnackBar('Equipo eliminado correctamente', 'check_circle', 'success');
+        this.showSnackBar('Equipo eliminado correctamente', 'check_circle', 'green');
       },
       error: (error) => {
         console.log(error);
