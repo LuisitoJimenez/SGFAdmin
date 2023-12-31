@@ -1,8 +1,25 @@
-<mat-toolbar>
+<!-- <mat-toolbar>
   <img src="../../../assets/img/icons/game.png" alt="User" class="toolbar-image">
   <span class="toolbar-span">{{ titleModule }}</span>
   <div class="example-spacer"></div>
   <button mat-fab color="primary" aria-label="boton-borrar" matTooltip="Agregar" class="my-fab" (click)="handleGameOperation()">
     <mat-icon>add</mat-icon>
   </button>
+</mat-toolbar> -->
+
+<mat-toolbar>
+  <img src="../../../assets/img/icons/game.png" alt="User" class="toolbar-image">
+  <span class="toolbar-span">{{ titleModule }}</span>
+  <div class="example-spacer"></div>
+  <button mat-fab color="primary" aria-label="boton-borrar" matTooltip="Agregar" class="my-fab"
+    (click)="handleGameOperation()">
+    <mat-icon>add</mat-icon>
+  </button>
 </mat-toolbar>
+<div class="list">
+  @for (game of gamesList; track game) {
+  <app-card [imageSrc]="imageSrc" [cardData]="game" [cardDefinition]="cardDefinition"
+    (deleteItem)="deleteGame($event)" (editItem)="handleGameOperation($event)"></app-card>
+  }
+</div>
+

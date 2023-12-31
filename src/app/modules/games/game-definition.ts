@@ -27,7 +27,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         disabled: false,
         hidden: false,
         label: 'Partido',
-        name: 'game',
+        name: 'name',
         type: ElementType.text,
         placeholder: 'Partido',
         readonly: false,
@@ -43,7 +43,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         disabled: false,
         hidden: false,
         label: 'Cancha',
-        name: 'soccerField',
+        name: 'field',
         type: ElementType.text,
         placeholder: 'Cancha',
         readonly: false,
@@ -54,7 +54,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         value: ''
       },
       {
-        name: 'date',
+        name: 'gameDate',
         label: ' Fecha',
         element: FormElement.picker,
         colClass: 'col-sm-4',
@@ -68,7 +68,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         validationMsg: 'Requerido'
       },
       {
-        name: 'time',
+        name: 'gameTime',
         label: 'Hora',
         placeholder: 'Hora',
         element: FormElement.time,
@@ -84,7 +84,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         validationMsg: 'Este campo es requerido'
       },
       {
-        name: 'gender',
+        name: 'genderId',
         label: 'Género',
         placeholder: 'Género',
         element: FormElement.select,
@@ -100,7 +100,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         validationMsg: 'Este campo es requerido'
       },
       {
-        name: 'sub',
+        name: 'subId',
         label: 'SUB',
         placeholder: 'SUB',
         element: FormElement.select,
@@ -121,7 +121,7 @@ export const gameFormDefinition: DefinitionAccordion[] = [
         disabled: false,
         hidden: false,
         label: 'Árbitro',
-        name: 'referee',
+        name: 'refereeId',
         type: ElementType.text,
         placeholder: 'Árbitro',
         options: [],

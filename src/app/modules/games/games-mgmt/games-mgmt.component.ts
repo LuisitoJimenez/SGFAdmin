@@ -7,6 +7,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OptionsElement, optionsElement } from 'src/app/models/definition';
 import { TeamService } from 'src/app/services/team.service';
 import { RefereeService } from 'src/app/services/referee.service';
+import { GameService } from 'src/app/services/game.service';
+import { SnackbarComponent } from 'src/app/shared/components/snackbar/snackbar.component';
+import { CardModel } from 'src/app/models/CardModel';
 
 export interface optionsGroup {
   letter: string;
@@ -25,12 +28,34 @@ export class GamesMgmtComponent implements OnInit {
     data: []
   }
 
+  gamesList: any[] = [];
+  imageSrc!: { url: string, itemId: number };
+
   operation: string = '';
   openStep: number = 0;
   titleModule: string = 'Partidos';
   optionsSubs: any[] = [];
-
   optionsGroup: optionsGroup[] = [];
+
+  cardDefinition: CardModel = {
+    title: 'name',
+    subtitle: 'gender',
+    image: '',
+    labels: [
+      'Fecha',
+      'Hora',
+      'Árbitro',
+      'Sub'
+    ],
+    values: [
+      { element: 'game_date' },
+      { element: 'game_time' },
+      { element: 'referee' },
+      { element: 'sub' },
+    ],
+    showLabels: true,
+    showImage: false
+  }
 
 
   constructor(
@@ -39,7 +64,8 @@ export class GamesMgmtComponent implements OnInit {
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private teamsService: TeamService,
-    private refereeService: RefereeService
+    private refereeService: RefereeService,
+    private gameService: GameService
   ) { }
   ngOnInit(): void {
     this.getGamesList();
@@ -65,19 +91,99 @@ export class GamesMgmtComponent implements OnInit {
   }
 
   getGamesList(): void {
-
+    this.gameService.getGamesList().subscribe({
+      next: (result) => {
+        if (result.success) {
+          console.log(result.data);
+          const games = result.data.map((game: any) => {
+            const { referee, ...rest } = game;
+            const refereeName = JSON.parse(game.referee);
+            console.log(refereeName);
+            return {
+              ...rest,
+              referee: `${refereeName.first} ${refereeName.last} ${refereeName.secondLast}`,
+            }
+          });
+          this.gamesList = games;
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 
   updateGameData(gameId: number, game: any): void {
-
+    console.log(game);
+    this.gameService.updateGame(game, gameId).subscribe({
+      next: (result) => {
+        this.getGamesList();
+        this.showSnackBar('El partido se ha actualizado', 'check_circle', 'green');
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al actualizar el partido', 'error', 'red');
+      }
+    });
   }
 
   addGame(game: any): void {
+    console.log(game);
+    game.gameTime = this.convertToHHMMSS(game.gameTime);
 
+
+    this.gameService.addGame(game).subscribe({
+      next: (result) => {
+        console.log(result);
+        this.showSnackBar('El partido se ha agregado', 'check_circle', 'green');
+        this.getGamesList();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al agregar el partido', 'error', 'red');
+      }
+    });
+  }
+
+   convertToHHMMSS(time: string): string {
+    const parts = time.split(':');
+    if (parts.length === 2) {
+      return `${parts[0]}:${parts[1]}:00`;
+    }
+    return time;
+  }
+
+  deleteGame(gameId: number): void {
+    console.log(gameId);
+    this.gameService.deleteGame(gameId).subscribe({
+      next: (result) => {
+        this.showSnackBar('El partido se ha eliminado', 'check_circle', 'green');
+        this.getGamesList();
+      },
+      error: (error) => {
+        console.log(error);
+        this.showSnackBar('Error al eliminar el partido', 'error', 'red');
+      }
+    });
   }
 
   getGameData(gameId: number): void {
+    this.gameService.getGameData(gameId).subscribe({
+      next: (result) => {
+        if (result.success) {
+          this.form.data = result.data;
+          this.openOperationDialog(gameId);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
 
+  calculateSub(age: number, subs: any[]): any {
+    const subId = subs.find(sub => age >= sub.minAge && age <= sub.maxAge)?.value;
+    return subId ? subId : null;
   }
 
   getTeamsOptions(): void {
@@ -163,7 +269,7 @@ export class GamesMgmtComponent implements OnInit {
 
       },
       error: (error) => {
-
+        console.log(error);
       }
     });
   }
@@ -186,7 +292,7 @@ export class GamesMgmtComponent implements OnInit {
 
       this.form.definition.forEach((step: any) => {
         step.content.forEach((element: any) => {
-          if (element.name === 'gender') {
+          if (element.name === 'genderId') {
             element.options = options;
           }
         });
@@ -284,7 +390,7 @@ export class GamesMgmtComponent implements OnInit {
 
           this.form.definition.forEach((step: any) => {
             step.content.forEach((element: any) => {
-              if (element.name === 'sub') {
+              if (element.name === 'subId') {
                 element.options = this.optionsSubs;
               }
             });
@@ -314,14 +420,23 @@ export class GamesMgmtComponent implements OnInit {
     });
   }
 
-  showSnackBar(message: string) {
-    this._snackBar.open(message, '', {
-      duration: 5000,
+  showSnackBar(message: string, snackIcon: string, iconColor: string) {
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      data: { message: message, snackIcon: snackIcon, iconColor: iconColor },
+      duration: 1000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
       panelClass: ['center-message']
     });
   }
+  /*   showSnackBar(message: string) {
+      this._snackBar.open(message, '', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['center-message']
+      });
+    } */
 
   getRefereeOptions(): void {
     this.refereeService.getRefereesOptions().subscribe({
@@ -374,7 +489,7 @@ export class GamesMgmtComponent implements OnInit {
 
           this.form.definition.forEach((step: any) => {
             step.content.forEach((element: any) => {
-              if (element.name === 'referee') {
+              if (element.name === 'refereeId') {
                 element.options = this.optionsGroup;
               }
             });

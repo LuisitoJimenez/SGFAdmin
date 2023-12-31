@@ -33,12 +33,9 @@ export class TeamService {
   }
 
   deleteTeam(teamId: number) {
-/*     const headers = new HttpHeaders({
-      teamId: teamId,
-    }); */
     return this.http.delete<void>(`${environment.baseService}${'/teams'}/${teamId}`);
   }
-  
+
   getTeamData(teamId: number) {
     return this.http.get<ApiResponse>(`${environment.baseService}${'/teams'}/${teamId}`);
   }
