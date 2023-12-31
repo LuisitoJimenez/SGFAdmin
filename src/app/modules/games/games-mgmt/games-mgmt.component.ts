@@ -115,6 +115,7 @@ export class GamesMgmtComponent implements OnInit {
 
   updateGameData(gameId: number, game: any): void {
     console.log(game);
+    game.gameTime = this.convertToHHMMSS(game.gameTime);
     this.gameService.updateGame(game, gameId).subscribe({
       next: (result) => {
         this.getGamesList();
