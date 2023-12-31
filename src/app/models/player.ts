@@ -43,3 +43,12 @@ export interface TeamModel {
   subId: number;
   coachName: String;
 }
+
+export interface GameModel {
+  name: string;
+  field: string
+  gameDate: Date;
+  gameTime: string;
+  subId: number;
+  refereeId: number;
+}
