@@ -131,18 +131,20 @@ export class GamesMgmtComponent implements OnInit {
   addGame(game: any): void {
     console.log(game);
     game.gameTime = this.convertToHHMMSS(game.gameTime);
-
-
     this.gameService.addGame(game).subscribe({
       next: (result) => {
         console.log(result);
-        this.showSnackBar('El partido se ha agregado', 'check_circle', 'green');
+        if (result.success) {
+          this.showSnackBar('El partido se ha agregado', 'check_circle', 'green');
         this.getGamesList();
+        } else {
+          this.showSnackBar(result.message!, 'error', 'red');
+        }
       },
       error: (error) => {
         console.log(error);
         this.showSnackBar('Error al agregar el partido', 'error', 'red');
-      }
+      } 
     });
   }
 
