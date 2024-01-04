@@ -22,7 +22,7 @@ export class GameService {
   }
 
   addGame(game: GameModel) {
-    return this.http.post<GameModel>(`${environment.baseService}${'/games'}`, game);
+    return this.http.post<ApiResponse>(`${environment.baseService}${'/games'}`, game);
   }
 
   getGameData(gameId: number) {
