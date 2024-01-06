@@ -46,11 +46,11 @@
       @switch (element.element) {
       @case ('input') {
       <div>
-        <mat-form-field style="width: 100%">
+        <mat-form-field style="width: 100%" [hidden]="element.hidden">
           <mat-label> {{ element.label }} </mat-label>
           <input [type]="element.type ?? 'defaultType'" [min]="element.min" [max]="element.max" matInput
             [placeholder]="element.placeholder" [formControlName]="element.name" [readonly]="element.readonly"
-            [disabled]="element.disabled">
+            [disabled]="element.disabled" >
           <mat-hint align="end">{{ element.unit }}</mat-hint>
           @if (form.get(element.name)?.invalid) {
           <mat-error>
