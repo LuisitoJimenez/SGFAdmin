@@ -36,15 +36,21 @@
     "alt": "Icon-jugador"
   },
   {
+    "name": "Usuarios",
+    "link": "/admin/users/",
+    "icon": "../../../assets/img/icons/user.png",
+    "alt": "Icon-usuario"
+  },
+  {
     "name": "Estadísticas",
     "link": "/admin/statistics",
     "icon": "../../../assets/img/icons/statistics.png",
     "alt": "Icon-estadistica"
   },
   {
-    "name": "Usuarios",
-    "link": "/admin/users/",
-    "icon": "../../../assets/img/icons/user.png",
-    "alt": "Icon-usuario"
+    "name": "Canchas",
+    "link": "/admin/fields",
+    "icon": "../../../assets/img/icons/field_.png",
+    "alt": "Icon-cancha"
   }
 ]
