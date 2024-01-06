@@ -110,6 +110,7 @@ export class UsersMgmtComponent implements OnInit {
   }
 
   updateUserData(userId: number, userData: any) {
+    console.log(userData);
     this.accessService.updateUserData(userId, userData).subscribe((result) => {
       if (result.success) {
         this.getUserList();
@@ -117,6 +118,7 @@ export class UsersMgmtComponent implements OnInit {
       }
     },
       (error) => {
+        console.log(error);
         this.showSnackBar('Error al actualizar el usuario', 'error', 'red');
       });
   }
@@ -128,6 +130,7 @@ export class UsersMgmtComponent implements OnInit {
         this.showSnackBar('El usuario se ha eliminado', 'check_circle', 'green');
       },
       error: (error: any) => {
+        console.log(error);
         this.showSnackBar('Error al eliminar el usuario', 'error', 'red');
       }
     });
@@ -147,6 +150,7 @@ export class UsersMgmtComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && this.operation === 'Editar' && userId) {
+
         this.updateUserData(userId, result.data);
       } else if (result && this.operation === 'Agregar') {
         this.adduser(result.data);
@@ -157,10 +161,28 @@ export class UsersMgmtComponent implements OnInit {
   handleUserOperation(userId?: number): void {
     if (userId) {
       this.operation = 'Editar';
+      console.log(this.form.definition);
+      this.form.definition.forEach((step: any) => {
+        step.content.forEach((element: any) => {
+          if (element.name === 'password') {
+            //step.hidden = false;
+            element.hidden = true;
+            element.validation = { required: false };
+          }
+        });
+      });
       this.getUserData(userId);
     } else {
       this.operation = 'Agregar';
       this.form.data = [];
+      this.form.definition.forEach((step: any) => {
+        step.content.forEach((element: any) => {
+          if (element.name === 'password') {
+            element.hidden = false;
+            element.validation = { required: true };
+          }
+        });
+      });
       this.openOperationDialog();
     }
   }
