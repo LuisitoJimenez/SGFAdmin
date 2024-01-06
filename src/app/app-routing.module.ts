@@ -65,6 +65,11 @@ const routes: Routes = [
           import('./modules/tournaments/tournaments.module').then((m) => m.TournamentsModule),
       },
       {
+        path: 'fields',
+        loadChildren: () =>
+          import('./modules/fields/fields.module').then((m) => m.FieldsModule),
+      },
+      {
         path: 'store',
         loadChildren: () =>
           import('./modules/store/store.module').then((m) => m.StoreModule),
