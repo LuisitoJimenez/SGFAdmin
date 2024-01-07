@@ -10,6 +10,7 @@ import { RefereeService } from 'src/app/services/referee.service';
 import { GameService } from 'src/app/services/game.service';
 import { SnackbarComponent } from 'src/app/shared/components/snackbar/snackbar.component';
 import { CardModel } from 'src/app/models/CardModel';
+import { FieldService } from 'src/app/services/field.service';
 
 export interface optionsGroup {
   letter: string;
@@ -61,11 +62,13 @@ export class GamesMgmtComponent implements OnInit {
   constructor(
     private accessService: AccessService,
     private definitionService: DefinitionService,
-    private dialog: MatDialog,
-    private _snackBar: MatSnackBar,
+    private dialog: MatDialog,    
+    private fieldService: FieldService,
+    private gameService: GameService,
     private teamsService: TeamService,
-    private refereeService: RefereeService,
-    private gameService: GameService
+    private refereeService: RefereeService,    
+    private snackBar: MatSnackBar,
+
   ) { }
   ngOnInit(): void {
     this.getGamesList();
@@ -74,6 +77,7 @@ export class GamesMgmtComponent implements OnInit {
     this.getSubsOptions();
     this.getTeamsOptions();
     this.getRefereeOptions();
+    this.getFieldsOptions();
     //this.teamsService.getTeamList();
   }
 
@@ -424,7 +428,7 @@ export class GamesMgmtComponent implements OnInit {
   }
 
   showSnackBar(message: string, snackIcon: string, iconColor: string) {
-    this._snackBar.openFromComponent(SnackbarComponent, {
+    this.snackBar.openFromComponent(SnackbarComponent, {
       data: { message: message, snackIcon: snackIcon, iconColor: iconColor },
       duration: 1000,
       horizontalPosition: 'center',
@@ -505,4 +509,30 @@ export class GamesMgmtComponent implements OnInit {
       }
     });
   }
+
+  getFieldsOptions(): void {
+    this.fieldService.getListFields().subscribe({
+      next: (response) => {
+        if (response.success) {
+          const options = response.data.map((field: any) => {
+            return {
+              value: field.id,
+              label: `${field.id} ${field.name}`
+            }
+          });
+          this.form.definition.forEach((step: any) => {
+            step.content.forEach((element: any) => {
+              if (element.name === 'fieldId') {
+                element.options = options;
+              }
+            });
+          });
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
 }
