@@ -6,6 +6,7 @@ import { refereeFormDefinition } from '../modules/referees/referee-definition';
 import { teamFormDefinition } from '../modules/teams/team-definition';
 import { clubFormDefinition } from '../modules/clubs/club-definition';
 import { gameFormDefinition } from '../modules/games/game-definition';
+import { fieldFormDefinition } from '../modules/fields/field-definition';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,14 @@ export class DefinitionService {
     const gameFormDef = JSON.stringify(gameFormDefinition);
     {
       return of(gameFormDef);
+    }
+  }
+
+  getFieldFormDefinition(): Observable<any> 
+  {
+    const fieldFormDef = JSON.stringify(fieldFormDefinition);
+    {
+      return of(fieldFormDef);
     }
   }
 
