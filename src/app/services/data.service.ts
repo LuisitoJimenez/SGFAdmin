@@ -9,6 +9,7 @@ export class DataService {
   private data$ = new BehaviorSubject<{ [key: string]: any }>({});
 
   setData(name: string, data: any) {
+    console.log('setData', name, data);
     const currentData = this.data$.getValue();
     this.data$.next({ ...currentData, [name]: data });
   }
