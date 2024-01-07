@@ -122,5 +122,9 @@
     {
         "id": 31,
         "name": "Zacatecas"
+    },
+    {
+        "id": 32,
+        "name": "Ciudad de México"
     }
 ]
