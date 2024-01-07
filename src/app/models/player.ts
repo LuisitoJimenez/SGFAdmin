@@ -52,3 +52,15 @@ export interface GameModel {
   subId: number;
   refereeId: number;
 }
+
+export interface FieldModel { 
+  name: string;
+  phone: string;
+  email: string;
+  street: string;
+  postalCode: string;
+  municipality: string;
+  town: string;
+  state: string;
+  capacity: number;
+}
