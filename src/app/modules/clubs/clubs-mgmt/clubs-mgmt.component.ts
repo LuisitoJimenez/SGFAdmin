@@ -169,6 +169,7 @@ export class ClubsMgmtComponent implements OnInit {
   }
 
   addClub(club: any, imageClub: string | File) {
+    console.log(club, imageClub);
     this.accessService.addClub(club).subscribe({
       next: (result: any) => {
         console.log(result);
