@@ -10,7 +10,7 @@ export const userFormDefinition: DefinitionAccordion[] = [
         name: 'id',
         label: 'ID',
         element: FormElement.input,
-        hidden: true,
+        hidden: false,
         colClass: 'col-sm-3',
         disabled: true,
         readonly: true,
