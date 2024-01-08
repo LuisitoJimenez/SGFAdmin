@@ -88,9 +88,10 @@ export class FieldsMgmtComponent implements OnInit {
             if (field.logo !== null) {
               this.getImageField(field.id, field.logo);
             }
+            const locationField = JSON.parse(address);
             return {
               ...rest,
-              address: JSON.parse(address)
+              address: `${locationField.municipality}, ${locationField.state}, C.P. ${locationField.postalCode}`
             }
           });
           console.log(this.fieldsList);
@@ -286,8 +287,21 @@ export class FieldsMgmtComponent implements OnInit {
     });
   }
 
-  deleteField($event: any) {
-    throw new Error('Method not implemented.');
+  deleteField(fieldId: number): void {
+    this.fieldService.deleteField(fieldId).subscribe({
+      next: (result: any) => {
+        if (result.success) {
+          this.showSnackBar('El club se ha eliminado', 'check_circle', 'green');
+          setTimeout(() => {
+            this.getFieldList();
+          }, 1500);
+        }
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.showSnackBar('El club no se ha eliminado', 'error', 'red');
+      }
+    });
   }
 
   openForm(fieldId?: number) {
